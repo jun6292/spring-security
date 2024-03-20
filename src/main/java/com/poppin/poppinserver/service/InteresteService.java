@@ -1,14 +1,10 @@
 package com.poppin.poppinserver.service;
 
-import com.poppin.poppinserver.domain.Intereste;
-import com.poppin.poppinserver.domain.Popup;
 import com.poppin.poppinserver.domain.User;
-import com.poppin.poppinserver.dto.Intereste.requeste.AddInteresteDto;
-import com.poppin.poppinserver.dto.Intereste.response.InteresteDto;
+import com.poppin.poppinserver.dto.Interest.requeste.AddInteresteDto;
+import com.poppin.poppinserver.dto.Interest.response.InteresteDto;
 import com.poppin.poppinserver.exception.CommonException;
 import com.poppin.poppinserver.exception.ErrorCode;
-import com.poppin.poppinserver.repository.InteresteRepository;
-import com.poppin.poppinserver.repository.PopupRepository;
 import com.poppin.poppinserver.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

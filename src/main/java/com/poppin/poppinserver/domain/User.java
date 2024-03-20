@@ -1,6 +1,7 @@
 package com.poppin.poppinserver.domain;
 
 import com.poppin.poppinserver.dto.auth.request.AuthSignUpDto;
+import com.poppin.poppinserver.oauth.dto.OAuth2UserInfoDto;
 import com.poppin.poppinserver.type.ELoginProvider;
 import com.poppin.poppinserver.type.EUserRole;
 import jakarta.persistence.*;
@@ -31,10 +32,10 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "nickname", nullable = false, unique = true)
+    @Column(name = "nickname", unique = true)
     private String nickname;
 
-    @Column(name = "birth_date", nullable = false)
+    @Column(name = "birth_date")
     private String birthDate;
 
     @Column(name = "created_at", nullable = false)
@@ -68,7 +69,7 @@ public class User {
 
     @Builder
     public User(String email, String password, String nickname, String birthDate,
-                ELoginProvider eLoginProvider, EUserRole eUserRole,
+                ELoginProvider eLoginProvider, EUserRole role,
                 Boolean agreedToPrivacyPolicy, Boolean agreedToServiceTerms, Boolean agreedToGPS)
     {
         this.email = email;
@@ -76,7 +77,7 @@ public class User {
         this.nickname = nickname;
         this.birthDate = birthDate;
         this.provider = eLoginProvider;
-        this.role = eUserRole;
+        this.role = role;
         this.agreedToPrivacyPolicy = agreedToPrivacyPolicy;
         this.agreedToServiceTerms = agreedToServiceTerms;
         this.agreedToGPS = agreedToGPS;
@@ -92,14 +93,38 @@ public class User {
                 .nickname(authSignUpDto.nickname())
                 .birthDate(authSignUpDto.birthDate())
                 .eLoginProvider(eLoginProvider)
-                .eUserRole(EUserRole.USER)
+                .role(EUserRole.USER)
                 .agreedToPrivacyPolicy(authSignUpDto.agreedToPrivacyPolicy())
                 .agreedToServiceTerms(authSignUpDto.agreedToServiceTerms())
                 .agreedToGPS(false)
                 .build();
     }
 
-    public void logoutUser() {
+    public static User toGuestEntity(OAuth2UserInfoDto oAuth2UserInfoDto, String encodedPassword, ELoginProvider eLoginProvider) {
+        return User.builder()
+                .email(oAuth2UserInfoDto.email())
+                .password(encodedPassword)
+                .birthDate("")
+                .nickname("")
+                .eLoginProvider(eLoginProvider)
+                .role(EUserRole.GUEST)
+                .agreedToPrivacyPolicy(true)
+                .agreedToServiceTerms(true)
+                .agreedToGPS(false)
+                .build();
+    }
+
+    public void register(String nickname, String birthDate) {
+        this.nickname = nickname;
+        this.birthDate = birthDate;
+        this.role = EUserRole.USER;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void logout() {
         this.isLogin = false;
         this.refreshToken = null;
     }

@@ -6,6 +6,7 @@ import com.poppin.poppinserver.type.EUserRole;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -20,9 +21,11 @@ public class JwtUtil implements InitializingBean {
     private String secretKey;
 
     @Value("${jwt.access-token-validity-in-milli-seconds}")
+    @Getter
     private Integer accessTokenExpirationPeriod;
 
     @Value("${jwt.refresh-token-validity-in-milli-seconds}")
+    @Getter
     private Integer refreshTokenExpirationPeriod;
 
     private Key key;

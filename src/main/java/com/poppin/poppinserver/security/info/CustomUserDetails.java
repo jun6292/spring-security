@@ -13,10 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 @Builder
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomUserDetails implements UserDetails {
+
     @Getter
     private final String email;
     private final String password;
@@ -24,6 +26,7 @@ public class CustomUserDetails implements UserDetails {
     @Getter
     private final EUserRole role;
     private final Collection<? extends GrantedAuthority> authorities;
+    private final Map<String, Object> attributes;
 
     public static CustomUserDetails create(User user) {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(Constant.ROLE_PREFIX + user.getRole());
@@ -36,6 +39,19 @@ public class CustomUserDetails implements UserDetails {
                 .authorities(authorities)
                 .build();
     }
+
+//    public static CustomUserDetails create(User user, Map<String, Object> attributes) {
+//        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(Constant.ROLE_PREFIX + user.getRole());
+//        Collection<GrantedAuthority> authorities = new ArrayList<>();
+//        authorities.add(authority);
+//        return CustomUserDetails.builder()
+//                .email(user.getEmail())
+//                .password(user.getPassword())
+//                .role(user.getRole())
+//                .authorities(authorities)
+//                .attributes(attributes)
+//                .build();
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
